@@ -2,7 +2,7 @@
 
 Name:           python-weberror
 Version:        0.10.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Web Error handling and exception catching middleware
 
 Group:          Development/Languages
@@ -29,12 +29,15 @@ Requires:       python-tempita
 Requires:       python-pygments
 Requires:       python-simplejson
 
+Patch0: bz746118-Fix-immediate-error-in-hash_identifier-in-case-of-FIPS.patch
+
 %description
 WebError is WSGI middleware that performs error handling and exception
 catching.
 
 %prep
 %setup -q -n WebError-%{version}
+%patch0 -p1 -b .bz746118
 find . -type f -name ._\* -exec rm -f {} \;
 %{__chmod} 0644 WebError.egg-info/*
 
@@ -64,6 +67,11 @@ nosetests
 
 
 %changelog
+* Mon Aug 5 2013 Jan Pokorny <jpokorny@redhat.com> - 0.10.2-2
+- Fix immediate error in hash_identifier in case of FIPS mode
+Resolves: rhbz#746118
+Related:  rhbz#956360
+
 * Wed Jul 14 2010 David Malcolm <dmalcolm@redhat.com> - 0.10.2-1
 - Update to 0.10.2
 - Fix license tag
